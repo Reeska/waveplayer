@@ -9,6 +9,15 @@
 	"keywords" : [ 
 		"wav", "IE10+", "player", "cross plateform", "HTML5"
 	],
+	"main" :  [
+		"dist/waveplayer.js",
+		"dist/waveplayer.css",
+		"dist/wave-buttons.png"
+	],
+	"ignore" : [
+		"READAME.md",
+		"sample/*"
+	],
 	"dependencies" : {
 		"jquery" : "*"
 	}
