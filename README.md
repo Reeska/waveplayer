@@ -9,7 +9,11 @@ The original purpose is to fix IE10+ .wav playing with HTML5 audio tag that is n
 
 ## Downloads
 
-Bower install is available.
+Bower install is available :
+
+```
+bower install waveplayer
+```
 
 ## Usage
 
@@ -30,7 +34,7 @@ You can use the jquery approach, that's generate HTML interface :
 	</div>		
 ```
 
-# Options
+### Options
 
 * data-src : File URI to play
 * data-label : label to show in player
