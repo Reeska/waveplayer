@@ -1,0 +1,47 @@
+.wave-player {
+	border: 0 none;
+	margin: 0;
+	padding: 0;
+	width: 177px;
+	vertical-align: middle;
+	color: white;
+	background-color: #424242;
+	border-radius: 5px;
+}
+
+.wave-inner {
+	margin: 0px auto;
+	text-align: left;
+	width: 92%!important;
+	float: none!important;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	padding: 4px;
+}
+
+.wave-player .wave-play,
+.wave-player .wave-stop { 
+	cursor: pointer;
+}
+
+.wave-player .wave-buttons {
+  font-size: 13pt;
+  vertical-align: middle;
+  padding-right: 6px;
+}
+
+.wave-player .wave-buttons i:hover {
+	opacity: 0.8;
+}
+
+.wave-player .wave-buttons i {
+	background-image: url('wave-buttons.png'); 
+	background-repeat: no-repeat;
+	width: 14px;
+	height: 14px;	
+	display: inline-block;
+}
+
+
+.wave-buttons .wave-play { background-position: left top; }
+.wave-buttons .wave-stop { background-position: right top; }

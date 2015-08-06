@@ -1,0 +1,15 @@
+{
+	"name": "WavePlayer",
+	"version": "1.0.0",
+	"homepage": "https://github.com/Reeska/waveplayer",
+	"authors": [
+		"Thomas Champion"
+	],
+	"description" : "A simple JavaScript sound player : it's allows to play .wav file in a lot of browsers with a same interface (Chrome, Firefox, IE8+). The original purpose is to fix IE10+ .wav playing with HTML5 audio tag that is not supported.",
+	"keywords" : [ 
+		"wav", "IE10+", "player", "cross plateform", "HTML5"
+	],
+	"dependencies" : {
+		"jquery" : "*"
+	}
+}
