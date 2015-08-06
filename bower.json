@@ -15,8 +15,8 @@
 		"dist/wave-buttons.png"
 	],
 	"ignore" : [
-		"READAME.md",
-		"sample/*"
+		"README.md",
+		"sample"
 	],
 	"dependencies" : {
 		"jquery" : "*"
