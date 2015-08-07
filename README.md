@@ -15,7 +15,7 @@ Bower install is available :
 bower install waveplayer
 ```
 
-## Usage
+## UI usage
 
 You can use the jquery approach, that's generate HTML interface :
 
@@ -34,17 +34,59 @@ You can use the jquery approach, that's generate HTML interface :
 	</div>		
 ```
 
-### Options
+### Data attributes
 
 * data-src : File URI to play
 * data-label : label to show in player
 
-Or use the programmaticaly approach :  
+## Programmatically  usage
+
+To use the programmatically approach :  
 
 ```javascript
 var wavePlayer = new wavePlayer();
 
 wavePlayer.play('sound.wav');
-
 wavePlayer.stop();
 ```
+
+With preload :
+
+```javascript
+var wavePlayer = new wavePlayer({uri : 'sound.wav'});
+
+wavePlayer.play();
+wavePlayer.stop();
+```
+
+Also, jQuery is not required.
+
+### Methods
+
+#### constructor(opts)
+
+Make a WavePlayer instance with specific options. 
+
+| name | description | type   | default   |
+|------|-------------|--------|-----------|
+| opts | Options map. | object | See below|
+
+##### Options
+
+| name      | description                                                                          | type    |  default     |
+|-----------|--------------------------------------------------------------------------------------|---------|--------------|
+| src       | Sound uri to preload.                                                                | string  | *none*      |
+| container | Tag container for media tag (bgsound, embed, ...).                                   | node    | document.body|
+| resetPlay | Force playing from start for HTML5 audio when play method is call after stop method. | boolean | true         |
+
+#### .play(uri)
+
+Play sound in parameter or set up in constructor options 'src'.
+
+| name | description | type   | default          |
+|------|-------------|--------|-----------|
+| uri  | Optional, sound uri to play | string | *none* |
+
+#### .stop()
+
+Stop current sound.
