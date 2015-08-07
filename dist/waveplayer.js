@@ -150,8 +150,25 @@
  * JQUERY PLUGIN : optional
  **********************************************************/
 if (jQuery) {
+	WavePlayer.messages = {
+		en: {
+			play: 'Play',
+			stop: 'Stop'
+		},
+		fr: {
+			play: 'Lecture',
+			stop: 'Stop'
+		}
+	};
+	
 	(function($) {
-		$.fn.wavePlayer = function() {
+		$.fn.wavePlayer = function(opts) {
+			var opts = $.extend({
+				lang: 'en'
+			}, opts);
+			
+			var mess = WavePlayer.messages[opts.lang];
+			
 			return this.each(function() {
 				var $this = $(this);
 				var data = $this.data();
@@ -163,16 +180,21 @@ if (jQuery) {
 				
 				$this.append(
 					'<div class="wave-inner">\
-						<span class="wave-buttons"><i class="wave-play"></i> <i class="wave-stop"></i></span> \
+						<span class="wave-buttons">\
+							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
+							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
+						</span> \
 						<span class="wave-label wave-play">' + (data.label ? data.label : '') + '</span>\
 					</div>'
 				);
 				
 				$('.wave-play', $this).click(function() {
 					wavePlayer.play(data.src);
+					return false;
 				});
 				$('.wave-stop', $this).click(function() {
 					wavePlayer.stop();
+					return false;
 				});
 				
 				return $this;
