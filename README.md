@@ -2,10 +2,11 @@ WavePlayer JavaScript library
 ========
 
 A simple JavaScript sound player : it's allows to play .wav file in a lot of browsers with a same interface (Chrome, Firefox, IE8+). 
-The original purpose is to fix IE10+ .wav playing with HTML5 audio tag that is not supported.
+The original purpose is to fix IE9+ .wav playing with HTML5 audio tag that is not supported.
 
-* For not IE browser : use HTML5 audio feature (http://www.w3schools.com/tags/ref_av_dom.asp)
-* For IE browser : use bgsound tag
+* For IE9+ browsers : use bgsound tag
+* For recent IE browsers : use HTML5 audio feature (http://www.w3schools.com/tags/ref_av_dom.asp)
+* Others : use embed tag
 
 ## Downloads
 
@@ -44,7 +45,7 @@ You can use the jquery approach, that's generate HTML interface :
 To use the programmatically approach :  
 
 ```javascript
-var wavePlayer = new wavePlayer();
+var wavePlayer = new WavePlayer();
 
 wavePlayer.play('sound.wav');
 wavePlayer.stop();
@@ -53,7 +54,7 @@ wavePlayer.stop();
 With preload :
 
 ```javascript
-var wavePlayer = new wavePlayer({uri : 'sound.wav'});
+var wavePlayer = new WavePlayer({uri : 'sound.wav'});
 
 wavePlayer.play();
 wavePlayer.stop();
