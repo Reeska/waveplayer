@@ -181,8 +181,8 @@ if (jQuery) {
 				$this.append(
 					'<div class="wave-inner">\
 						<span class="wave-buttons">\
-							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
-							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
+							<a href="#" class="wave-action wave-play" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
+							<a href="#" class="wave-action wave-stop" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
 						</span> \
 						<span class="wave-label wave-play">' + (data.label ? data.label : '') + '</span>\
 					</div>'

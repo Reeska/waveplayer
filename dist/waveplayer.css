@@ -30,11 +30,12 @@
   padding-right: 6px;
 }
 
-.wave-player .wave-buttons i:hover {
+.wave-player .wave-buttons .wave-action:focus,
+.wave-player .wave-buttons .wave-action:hover {
 	opacity: 0.8;
 }
 
-.wave-player .wave-buttons i {
+.wave-player .wave-buttons .wave-action {
 	background-image: url('wave-buttons.png'); 
 	background-repeat: no-repeat;
 	width: 14px;

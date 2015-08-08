@@ -7,6 +7,15 @@ The original purpose is to fix IE10+ .wav playing with HTML5 audio tag that is n
 * For not IE browser : use HTML5 audio feature (http://www.w3schools.com/tags/ref_av_dom.asp)
 * For IE browser : use bgsound tag
 
+## Supports
+
+Tested formats and browsers :
+
+| Format   | IE7+ | Firefox | Chrome | Chrome Android |
+| ---------- |:----:|:-----:|:-------:|:--------:|:----------:|:---------------:|:--------------:|
+| WAV | ✓ | ✓ | ✓ | ✓ |
+| MP3 | ✓ | ✓ | ✓ | ✓ |
+
 ## Downloads
 
 Bower install is available :
