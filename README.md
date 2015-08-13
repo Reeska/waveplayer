@@ -27,7 +27,7 @@ bower install waveplayer
 
 ## UI usage
 
-<p align="center">![Image of Yaktocat](sample/interface.png)</p>
+![UI](sample/interface.png)
 
 You can use the jquery approach which generates a HTML interface :
 
