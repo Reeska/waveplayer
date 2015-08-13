@@ -19,7 +19,7 @@ Tested formats and browsers :
 
 ## Downloads
 
-Bower install is available :
+Installation with Bower is available :
 
 ```
 bower install waveplayer
@@ -27,7 +27,9 @@ bower install waveplayer
 
 ## UI usage
 
-You can use the jquery approach, that's generate HTML interface :
+<p align="center">![Image of Yaktocat](sample/interface.png)</p>
+
+You can use the jquery approach which generates a HTML interface :
 
 ```html
 	<link href="../dist/waveplayer.css" type="text/css" rel="stylesheet" />
@@ -63,7 +65,7 @@ wavePlayer.stop();
 With preload :
 
 ```javascript
-var wavePlayer = new WavePlayer({uri : 'sound.wav'});
+var wavePlayer = new WavePlayer({src : 'sound.wav'});
 
 wavePlayer.play();
 wavePlayer.stop();
@@ -79,19 +81,19 @@ Make a WavePlayer instance with specific options.
 
 | name | description | type   | default   |
 |------|-------------|--------|-----------|
-| opts | Options map. | object | See below|
+| opts | Options map. | object | *See below* |
 
 ##### Options
 
 | name      | description                                                                          | type    |  default     |
 |-----------|--------------------------------------------------------------------------------------|---------|--------------|
-| src       | Sound uri to preload.                                                                | string  | *none*      |
+| src       | Sound uri to preload.                                                                | string  | *none*       |
 | container | Tag container for media tag (bgsound, embed, ...).                                   | node    | document.body|
-| resetPlay | Force playing from start for HTML5 audio when play method is call after stop method. | boolean | true         |
+| resetPlay | Force playing from start for HTML5 audio when play method is called after stop method. | boolean | true         |
 
 #### .play(uri)
 
-Play sound in parameter or set up in constructor options 'src'.
+Play the sound in parameter or passed in constructor with option 'src'.
 
 | name | description | type   | default          |
 |------|-------------|--------|-----------|
