@@ -53,7 +53,7 @@
 	 * @returns {WavePlayer}
 	 */
 	WavePlayer.prototype.volume = function(percentage) {
-		return this._volume.apply(this, arguments);
+		return (this.volume = this._volume.apply(this, arguments));
 	};	
 	
 	/**
@@ -191,9 +191,9 @@
 		
 		WavePlayer.prototype._volume = function(percentage) {
 			if (arguments.length > 0) {
-				this.opts.volume = percentage;
+				this.volume = percentage;
 				this.embed.parentNode.removeChild(this.embed);
-				this.embed = this._embedding(this.src);
+				this.embed = this._embedding();
 			}
 			
 			return this._volumeToPercent();
@@ -217,7 +217,7 @@
 		WavePlayer.prototype._embedding = function(src) {
 			var e = document.createElement('embed');
 			e.style.height = 0;
-			e.src = src;
+			e.src = src || this.src;
 			e.type = 'audio/wav';
 			e.volume = this._percentToVolume(this.volume);
 			e.autostart = false;
