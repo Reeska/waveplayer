@@ -52,7 +52,12 @@
 	 * @param int percentage value in [0, 100].
 	 * @returns {WavePlayer}
 	 */
-	WavePlayer.prototype.volume = function(percentage) {
+	WavePlayer.prototype.volume = function(/*percentage*/) {
+		if (arguments.length > 0) {
+			if (arguments[0] < 0) arguments[0] = 0;
+			if (arguments[0] > 100) arguments[0] = 100;
+		}
+		
 		return (this.volume = this._volume.apply(this, arguments));
 	};	
 	
@@ -62,10 +67,7 @@
 	 * @returns {WavePlayer}
 	 */
 	WavePlayer.prototype.volumeDown = function(step) {
-		var vol = this.volume() - (step || 10);
-		if (vol < 0) vol = 0;
-		
-		return this.volume(vol);
+		return this.volume(this.volume() - (step || 10));
 	};
 	
 	/**
@@ -74,10 +76,7 @@
 	 * @returns {WavePlayer}
 	 */
 	WavePlayer.prototype.volumeUp = function(step) {
-		var vol = this.volume() + (step || 10);
-		if (vol > 100) vol = 100;
-		
-		return this.volume(vol);
+		return this.volume(this.volume() + (step || 10));
 	};	
 	
 	/**********************************************************
