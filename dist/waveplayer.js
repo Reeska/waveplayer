@@ -2,17 +2,20 @@
 	/**********************************************************
 	 * COMMON & INTERFACE
 	 **********************************************************/
-	var ie = document.documentMode;
+	var ie = document.documentMode,
+		console = window.console || { log: function() {}, error: function() {} };
 	
 	function WavePlayer(opts) {
 		this.opts = {
 			src: opts.src || '',
 			container: opts.container || document.body,
-			resetPlay: opts.resetPlay || true // Always playing from start (not pause) (HTML5 audio only)
+			resetPlay: opts.resetPlay || true, // Always playing from start (not pause) (HTML5 audio only),
+			volume: opts.volume || 100
 		};
 		
 		this.playing = false;
 		this.src = opts.src;
+		this.volume = opts.volume;
 		
 		this._init();
 	};
@@ -44,6 +47,39 @@
 		return this;
 	};
 	
+	/**
+	 * Set volume.
+	 * @param int percentage value in [0, 100].
+	 * @returns {WavePlayer}
+	 */
+	WavePlayer.prototype.volume = function(percentage) {
+		return this._volume.apply(this, arguments);
+	};	
+	
+	/**
+	 * Set volume up by step percentage.
+	 * @param int step
+	 * @returns {WavePlayer}
+	 */
+	WavePlayer.prototype.volumeDown = function(step) {
+		var vol = this.volume() - (step || 10);
+		if (vol < 0) vol = 0;
+		
+		return this.volume(vol);
+	};
+	
+	/**
+	 * Set volume down by step percentage.
+	 * @param int step
+	 * @returns {WavePlayer}
+	 */
+	WavePlayer.prototype.volumeUp = function(step) {
+		var vol = this.volume() + (step || 10);
+		if (vol > 100) vol = 100;
+		
+		return this.volume(vol);
+	};	
+	
 	/**********************************************************
 	 * IMPLEMENTATION
 	 **********************************************************/	
@@ -53,7 +89,7 @@
 	if (ie > 8) {
 		WavePlayer.prototype._init = function() {
 			var e = document.createElement('bgsound');
-			e.volume = -10000;
+			e.volume = this._percentToVolume(this.volume);
 			e.balance = 0;
 			e.src = this.opts.src;
 			
@@ -69,6 +105,24 @@
 		WavePlayer.prototype._stop = function(uri) {
 			this.bgsound.removeAttribute('src');
 		};
+		
+		WavePlayer.prototype._volume = function(percentage) {
+			if (arguments.length > 0) {
+				this.bgsound.volume = this._percentToVolume(percentage);				
+			}
+			
+			return this._volumeToPercent();
+		};		
+		
+		WavePlayer.prototype._percentToVolume = function(percentage) {
+			// MIN = -10000
+			// MAX = 0		
+			return (percentage - 100) * 100;
+		};
+		
+		WavePlayer.prototype._volumeToPercent = function() {
+			return this.bgsound.volume * 100;
+		};		
 	} 
 	/**
 	 * For modern browsers
@@ -76,6 +130,7 @@
 	else if ('Audio' in window) {
 		WavePlayer.prototype._init = function() {
 			this.audioPlayer = new Audio(this.opts.src);
+			this.audioPlayer.volume = this._percentToVolume(this.volume);
 		}
 		
 		WavePlayer.prototype._play = function(uri) {
@@ -91,6 +146,24 @@
 		WavePlayer.prototype._stop = function(uri) {
 			this.audioPlayer.pause();
 		};		
+		
+		WavePlayer.prototype._volume = function(percentage) {
+			if (arguments.length > 0) {
+				this.audioPlayer.volume = this._percentToVolume(percentage);
+			}
+			
+			return this._volumeToPercent();
+		};	
+		
+		WavePlayer.prototype._percentToVolume = function(percentage) {
+			// MIN = 0
+			// MAX = 1			
+			return percentage / 100;
+		};
+		
+		WavePlayer.prototype._volumeToPercent = function() {
+			return this.audioPlayer.volume * 100;
+		};		
 	} 
 	/**
 	 * Other browsers and IE8: Use embed because there is an error with bgsound and https for IE8
@@ -102,24 +175,39 @@
 		
 		WavePlayer.prototype._play = function(uri) {
 			/*
-			 * remove embed if uri changes
+			 * build new embed tag if uri changes
 			 */
 			if (this.embed && this.src != uri) {
-				this.emebed.parentNode.removeChild(this.embed);
-				delete this.embed;
+				this.embed.parentNode.removeChild(this.embed);
+				this.embed = this._embedding(uri);	
 			}
-			
-			if (this.embed)
-				this.embed.Play();
-			else
-				this.embed = this._embedding(opts.src);			
+
+			this.embed.Play();
 		}
 		
 		WavePlayer.prototype._stop = function(uri) {
-			if (this.embed) {
-				this.embed.Stop();		
-			}			
+			this.embed.Stop();		
 		};	
+		
+		WavePlayer.prototype._volume = function(percentage) {
+			if (arguments.length > 0) {
+				this.opts.volume = percentage;
+				this.embed.parentNode.removeChild(this.embed);
+				this.embed = this._embedding(this.src);
+			}
+			
+			return this._volumeToPercent();
+		};		
+		
+		WavePlayer.prototype._percentToVolume = function(percentage) {
+			// MIN = -10000
+			// MAX = 0			
+			return (percentage - 100) * 40;
+		};
+		
+		WavePlayer.prototype._volumeToPercent = function() {
+			return (this.embed.volume / 40) + 100;
+		};		
 
 		/**
 		 * Make and append embed tag for embed approach (old browsers)
@@ -131,7 +219,7 @@
 			e.style.height = 0;
 			e.src = src;
 			e.type = 'audio/wav';
-			e.volume = 0;
+			e.volume = this._percentToVolume(this.volume);
 			e.autostart = false;
 			
 			this.opts.container.appendChild(e);	
@@ -175,27 +263,40 @@ if (jQuery) {
 				
 				var wavePlayer = new WavePlayer({
 					container: $this[0],
-					src: data.src // to preload
+					src: data.src, // to preload,
+					volume: data.volume
 				});
 				
 				$this.append(
 					'<div class="wave-inner">\
 						<span class="wave-buttons">\
-							<a href="#" class="wave-action wave-play" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
-							<a href="#" class="wave-action wave-stop" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
+							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
+							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
 						</span> \
 						<span class="wave-label wave-play">' + (data.label ? data.label : '') + '</span>\
 					</div>'
 				);
 				
-				$('.wave-play', $this).click(function() {
+				/*
+				 * Bind buttons action
+				 */
+				$this
+				.delegate('.wave-play', 'click', function() {
 					wavePlayer.play(data.src);
 					return false;
-				});
-				$('.wave-stop', $this).click(function() {
+				})
+				.delegate('.wave-stop', 'click', function() {
 					wavePlayer.stop();
 					return false;
-				});
+				})
+				.delegate('.wave-vol-up', 'click', function() {
+					wavePlayer.volumeUp();
+					return false;
+				})
+				.delegate('.wave-vol-down', 'click', function() {
+					wavePlayer.volumeDown();
+					return false;
+				});				
 				
 				return $this;
 			});
