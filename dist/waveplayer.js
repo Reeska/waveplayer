@@ -14,8 +14,8 @@
 		};
 		
 		this.playing = false;
-		this.src = opts.src;
-		this.volume = opts.volume;
+		this.src = this.opts.src;
+		this.volume = this.opts.volume;
 		
 		this._init();
 	};
