@@ -237,7 +237,6 @@
 		};	
 		
 		WavePlayer.prototype._playing = function() {
-			console.log(this.embed.playState);
 			return this.embed.playState >= 2;
 		};
 		
@@ -251,6 +250,7 @@
 				 * Need to replace tag because volume changes
 				 * doesn't take effect in place.
 				 */
+				this.stop();
 				this.embed.parentNode.removeChild(this.embed);
 				this.embed = this._embedding();
 				if (playing) {
@@ -271,8 +271,8 @@
 		};
 		
 		WavePlayer.prototype._volumeToPercent = function() {
-			if (this.bgsound.volume == -10000) return 0;
-			return (this.bgsound.volume / 40) + 100;
+			if (this.embed.volume == -10000) return 0;
+			return (this.embed.volume / 40) + 100;
 		};		
 
 		/**
@@ -369,11 +369,18 @@ if (jQuery) {
 				})
 				.fireChanges('volumeLevel');
 				
-				$volumeCtrl.click(function(e) {
+				$volumeCtrl.bind('mousemove click', function(e) {
+					/*
+					 * button pressed is required for non click event
+					 */
+					if (!(e.which || e.button) && 
+						e.type != 'click') return;
+					
 					var w = $volumeCtrl.width(),
 						x = e.offsetX;
+					var vol = parseInt(x * 100 / w);
 					
-					wavePlayer.volume(parseInt(x * 100 / w));
+					wavePlayer.volume(vol);
 					return false;
 				});
 				
