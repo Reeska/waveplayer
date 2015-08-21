@@ -2,8 +2,8 @@
 	/**********************************************************
 	 * COMMON & INTERFACE
 	 **********************************************************/
-	var ie = document.documentMode,
-		console = window.console || { log: function() {}, error: function() {} };
+	var ie = document.documentMode
+//		, console = window.console || { log: function() {}, error: function() {} };
 	
 	function WavePlayer(opts) {
 		this.opts = {
@@ -15,7 +15,9 @@
 		
 		this.playing = false;
 		this.src = this.opts.src;
-		this.volume = this.opts.volume;
+		this.volumeLevel = this.opts.volume;
+		
+		this.eventHandlers = [];
 		
 		this._init();
 	};
@@ -58,7 +60,16 @@
 			if (arguments[0] > 100) arguments[0] = 100;
 		}
 		
-		return (this.volume = this._volume.apply(this, arguments));
+		var oldLevel = this.volumeLevel;
+		this.volumeLevel = parseInt(this._volume.apply(this, arguments));
+		
+		/*
+		 * Fire volume leve changes
+		 */
+		if (oldLevel != this.volumeLevel)
+			this.fireChanges('volumeLevel');
+		
+		return this.volumeLevel;
 	};	
 	
 	/**
@@ -79,6 +90,37 @@
 		return this.volume(this.volume() + (step || 10));
 	};	
 	
+	/**
+	 * Register a property changes event handler.
+	 * @param property Property to observe.
+	 * @param fn Handler to call when property changes.
+	 */
+	WavePlayer.prototype.on = function(property, fn) {
+		var handlers = this.eventHandlers[property] || [];
+		
+		handlers.push(fn);
+		
+		this.eventHandlers[property] = handlers;
+		
+		return this;
+	};	
+	
+	/**
+	 * Fire property changes event : calling registred handlers for this event.
+	 * @param property
+	 */
+	WavePlayer.prototype.fireChanges = function(property) {
+		if (!this.eventHandlers[property])
+			return;
+		
+		var handlers = this.eventHandlers[property];
+		
+		for (var h = 0; h < handlers.length; h++)
+			handlers[h].call(this, this[property]);
+		
+		return this;
+	};	
+	
 	/**********************************************************
 	 * IMPLEMENTATION
 	 **********************************************************/	
@@ -88,7 +130,7 @@
 	if (ie > 8) {
 		WavePlayer.prototype._init = function() {
 			var e = document.createElement('bgsound');
-			e.volume = this._percentToVolume(this.volume);
+			e.volume = -10000;
 			e.balance = 0;
 			e.src = this.opts.src;
 			
@@ -97,7 +139,7 @@
 		};
 		
 		WavePlayer.prototype._play = function(uri) {
-			this.bgsound.volume = 0;
+			this.bgsound.volume = this._percentToVolume(this.volumeLevel);
 			this.bgsound.src = uri;
 		};
 		
@@ -116,12 +158,14 @@
 		WavePlayer.prototype._percentToVolume = function(percentage) {
 			// MIN = -10000
 			// MAX = 0		
-			return (percentage - 100) * 100;
+			if (percentage == 0) return -10000;
+			return (percentage - 100) * 40;
 		};
 		
 		WavePlayer.prototype._volumeToPercent = function() {
-			return this.bgsound.volume * 100;
-		};		
+			if (this.bgsound.volume == -10000) return 0;
+			return (this.bgsound.volume / 40) + 100;
+		};
 	} 
 	/**
 	 * For modern browsers
@@ -129,7 +173,7 @@
 	else if ('Audio' in window) {
 		WavePlayer.prototype._init = function() {
 			this.audioPlayer = new Audio(this.opts.src);
-			this.audioPlayer.volume = this._percentToVolume(this.volume);
+			this.audioPlayer.volume = this._percentToVolume(this.volumeLevel);
 		}
 		
 		WavePlayer.prototype._play = function(uri) {
@@ -144,6 +188,10 @@
 		
 		WavePlayer.prototype._stop = function(uri) {
 			this.audioPlayer.pause();
+		};		
+		
+		WavePlayer.prototype._playing = function() {
+			return !this.audioPlayer.paused;
 		};		
 		
 		WavePlayer.prototype._volume = function(percentage) {
@@ -176,7 +224,7 @@
 			/*
 			 * build new embed tag if uri changes
 			 */
-			if (this.embed && this.src != uri) {
+			if (this.src != uri) {
 				this.embed.parentNode.removeChild(this.embed);
 				this.embed = this._embedding(uri);	
 			}
@@ -188,11 +236,28 @@
 			this.embed.Stop();		
 		};	
 		
+		WavePlayer.prototype._playing = function() {
+			console.log(this.embed.playState);
+			return this.embed.playState >= 2;
+		};
+		
 		WavePlayer.prototype._volume = function(percentage) {
+			var that = this;
 			if (arguments.length > 0) {
-				this.volume = percentage;
+				var playing = this._playing();
+				this.volumeLevel = percentage;
+				
+				/*
+				 * Need to replace tag because volume changes
+				 * doesn't take effect in place.
+				 */
 				this.embed.parentNode.removeChild(this.embed);
 				this.embed = this._embedding();
+				if (playing) {
+					setTimeout(function() {
+						that.play();
+					}, 500);
+				}
 			}
 			
 			return this._volumeToPercent();
@@ -200,12 +265,14 @@
 		
 		WavePlayer.prototype._percentToVolume = function(percentage) {
 			// MIN = -10000
-			// MAX = 0			
+			// MAX = 0		
+			if (percentage == 0) return -10000;
 			return (percentage - 100) * 40;
 		};
 		
 		WavePlayer.prototype._volumeToPercent = function() {
-			return (this.embed.volume / 40) + 100;
+			if (this.bgsound.volume == -10000) return 0;
+			return (this.bgsound.volume / 40) + 100;
 		};		
 
 		/**
@@ -213,13 +280,13 @@
 		 * @param src
 		 * @returns {String}
 		 */
-		WavePlayer.prototype._embedding = function(src) {
+		WavePlayer.prototype._embedding = function(src, onload) {
 			var e = document.createElement('embed');
 			e.style.height = 0;
 			e.src = src || this.src;
 			e.type = 'audio/wav';
-			e.volume = this._percentToVolume(this.volume);
-			e.autostart = false;
+			e.volume = this._percentToVolume(this.volumeLevel);
+			e.autostart = false;	
 			
 			this.opts.container.appendChild(e);	
 			
@@ -240,18 +307,22 @@ if (jQuery) {
 	WavePlayer.messages = {
 		en: {
 			play: 'Play',
-			stop: 'Stop'
+			stop: 'Stop',
+			volume: 'Volume control'
 		},
 		fr: {
 			play: 'Lecture',
-			stop: 'Stop'
+			stop: 'Stop',
+			volume: 'Contrôle du volume'
 		}
 	};
 	
 	(function($) {
 		$.fn.wavePlayer = function(opts) {
 			var opts = $.extend({
-				lang: 'en'
+				lang: 'en',
+				label: '',
+				volumectrl: true // show volume control
 			}, opts);
 			
 			var mess = WavePlayer.messages[opts.lang];
@@ -260,23 +331,53 @@ if (jQuery) {
 				var $this = $(this);
 				var data = $this.data();
 				
+				/*
+				 * Data-attribute can override options
+				 */
+				var opts = $.extend(opts, data);				
+				
+				/**
+				 * Init UI
+				 */
 				var wavePlayer = new WavePlayer({
 					container: $this[0],
-					src: data.src, // to preload,
-					volume: data.volume
+					src: opts.src, // to preload,
+					volume: opts.volume
 				});
 				
 				$this.append(
 					'<div class="wave-inner">\
 						<span class="wave-buttons">\
 							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
-							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a>\
+							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a> \
+						' + ( opts.volumectrl ?	'<span class="wave-volume" title="' + mess.volume + '"><span class="wave-volume-label"></span><span class="wave-volume-level"></span></span>' : '') + '\
+						' + ( opts.label ? '<span class="wave-label wave-play">' + opts.label + '</span>' : '') + '\
 						</span> \
-						<span class="wave-label wave-play">' + (data.label ? data.label : '') + '</span>\
 					</div>'
 				);
 				
-				/*
+				/**
+				 * Volume control
+				 */
+				var $volumeCtrl = $('.wave-volume', $this);
+				var $volumeLevel = $('.wave-volume-level', $volumeCtrl);
+				var $volumeLabel = $('.wave-volume-label', $volumeCtrl);
+				
+				wavePlayer.on('volumeLevel', function(volumeLevel) {
+					$volumeLevel.css({width: volumeLevel + '%'});
+					$volumeLabel.text(volumeLevel);
+				})
+				.fireChanges('volumeLevel');
+				
+				$volumeCtrl.click(function(e) {
+					var w = $volumeCtrl.width(),
+						x = e.offsetX;
+					
+					wavePlayer.volume(parseInt(x * 100 / w));
+					return false;
+				});
+				
+				/**
 				 * Bind buttons action
 				 */
 				$this
@@ -295,7 +396,7 @@ if (jQuery) {
 				.delegate('.wave-vol-down', 'click', function() {
 					wavePlayer.volumeDown();
 					return false;
-				});				
+				});
 				
 				return $this;
 			});

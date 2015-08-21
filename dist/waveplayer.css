@@ -16,7 +16,7 @@
 	float: none!important;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10pt;
-	padding: 4px;
+	padding: 6px 4px;
 }
 
 .wave-player .wave-play,
@@ -41,8 +41,45 @@
 	width: 14px;
 	height: 14px;	
 	display: inline-block;
+	vertical-align: middle;
 }
-
 
 .wave-buttons .wave-play { background-position: left top; }
 .wave-buttons .wave-stop { background-position: right top; }
+
+.wave-label {
+  vertical-align: middle;
+  font-size: 10pt;
+  padding-left: 4px;
+}
+
+/**
+ * Volume control
+ */
+.wave-volume {
+  display: inline-block;
+  width: 25px;
+  height: 12px;
+  background-color: white;
+  vertical-align: middle;
+  border: 1px solid #FFFFFF;
+  cursor: pointer;
+  position: relative;
+  border-left: 0 none;
+  border-right: 0 none;
+}
+
+.wave-volume .wave-volume-level {
+  display: inline-block;
+  height: 100%;
+  background-color: rgb(182, 182, 182);	
+}
+
+.wave-volume .wave-volume-label {
+  position: absolute;
+  font-size: 7pt;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  color: black;
+}
