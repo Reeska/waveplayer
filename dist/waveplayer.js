@@ -334,7 +334,7 @@ if (jQuery) {
 				/*
 				 * Data-attribute can override options
 				 */
-				var opts = $.extend(opts, data);				
+				var _opts = $.extend({}, opts, data);
 				
 				/**
 				 * Init UI
@@ -348,10 +348,10 @@ if (jQuery) {
 				$this.append(
 					'<div class="wave-inner">\
 						<span class="wave-buttons">\
-							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (data.tabindex || "") + '"></a> \
-							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (data.tabindex || "") + '"></a> \
-						' + ( opts.volumectrl ?	'<span class="wave-volume" title="' + mess.volume + '"><span class="wave-volume-label"></span><span class="wave-volume-level"></span></span>' : '') + '\
-						' + ( opts.label ? '<span class="wave-label wave-play">' + opts.label + '</span>' : '') + '\
+							<a href="#" class="wave-action wave-play" alt="' + mess.play + '" title="' + mess.play + '" tabindex="' + (_opts.tabindex || "") + '"></a> \
+							<a href="#" class="wave-action wave-stop" alt="' + mess.stop + '" title="' + mess.stop + '" tabindex="' + (_opts.tabindex || "") + '"></a> \
+						' + ( _opts.volumectrl ?	'<span class="wave-volume" title="' + mess.volume + '"><span class="wave-volume-label"></span><span class="wave-volume-level"></span></span>' : '') + '\
+						' + ( _opts.label ? '<span class="wave-label wave-play">' + _opts.label + '</span>' : '') + '\
 						</span> \
 					</div>'
 				);

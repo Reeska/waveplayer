@@ -1,20 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<link href="../dist/waveplayer.css" type="text/css" rel="stylesheet" />
 	<script src="../dist/waveplayer.js"></script>
 	<script>
 		$(document).ready(function() {
-			$('.wave-player').wavePlayer();
+			$('.wave-player').wavePlayer({ lang : 'fr' });
 		});
 	</script>
 </head>
 	
 <body>
-	<div class="wave-player" 
-		data-src="sound.wav" 
-		data-label="Play">
+	<div>
+		<p>Listen the captcha : simplifiest mode</p>
+		<div class="wave-player" data-src="sound.wav" data-volumectrl="false"></div>	
+	</div>
+	
+	<div>
+		<p>Listen the captcha : with label and without volume controller</p>
+		<div class="wave-player" 
+			data-src="sound.wav" 
+			data-volumectrl="false"
+			data-label="Play">
+		</div>	
+	</div>	
+	
+	<div>
+		<p>Listen the captcha : full mode</p>
+		<div class="wave-player" 
+			data-src="sound.wav" 
+			data-label="Play">
+		</div>	
 	</div>
 </body>
 </html>

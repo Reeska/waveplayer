@@ -7,6 +7,8 @@
 	color: white;
 	background-color: #424242;
 	border-radius: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8pt;
 }
 
 .wave-inner {
@@ -14,8 +16,6 @@
 	text-align: left;
 	width: 92%!important;
 	float: none!important;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
 	padding: 6px 4px;
 }
 
@@ -25,7 +25,6 @@
 }
 
 .wave-player .wave-buttons {
-  font-size: 13pt;
   vertical-align: middle;
   padding-right: 6px;
 }
@@ -82,4 +81,11 @@
   display: inline-block;
   width: 100%;
   color: black;
+  margin-top: 1px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;    
 }
