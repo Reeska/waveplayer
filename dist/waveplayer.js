@@ -341,8 +341,8 @@ if (jQuery) {
 				 */
 				var wavePlayer = new WavePlayer({
 					container: $this[0],
-					src: opts.src, // to preload,
-					volume: opts.volume
+					src: _opts.src, // to preload,
+					volume: _opts.volume
 				});
 				
 				$this.append(
