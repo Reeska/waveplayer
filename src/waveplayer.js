@@ -2,8 +2,7 @@
 	/**********************************************************
 	 * COMMON & INTERFACE
 	 **********************************************************/
-	var ie = document.documentMode
-//		, console = window.console || { log: function() {}, error: function() {} };
+	var ie = document.documentMode;
 	
 	function WavePlayer(opts) {
 		this.opts = {
@@ -283,6 +282,7 @@
 		WavePlayer.prototype._embedding = function(src, onload) {
 			var e = document.createElement('embed');
 			e.style.height = 0;
+			e.style.display = 'none';
 			e.src = src || this.src;
 			e.type = 'audio/wav';
 			e.volume = this._percentToVolume(this.volumeLevel);
@@ -373,10 +373,10 @@ if (jQuery) {
 					/*
 					 * button pressed is required for non click event
 					 */
-					if (!(e.which || e.button) && 
-						e.type != 'click') return;
+					if (((e.buttons === undefined && !e.button) || 
+						(e.buttons !== undefined && !e.buttons)) && e.type != 'click') return;
 					
-					var w = $volumeCtrl.width(),
+					var w = $volumeCtrl.width() - 1, // -1: because in IE offsetX can reach (width - 1) max
 						x = e.offsetX;
 					var vol = parseInt(x * 100 / w);
 					

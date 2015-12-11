@@ -16,7 +16,9 @@
 	],
 	"ignore" : [
 		"README.md",
-		"sample"
+		"sample",
+		"Gruntfile.js",
+		"package.json"
 	],
 	"dependencies" : {
 		"jquery" : "*"
