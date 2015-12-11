@@ -75,6 +75,7 @@
 }
 
 .wave-volume .wave-volume-label {
+  line-height: 1;
   position: absolute;
   font-size: 7pt;
   text-align: center;
