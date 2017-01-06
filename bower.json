@@ -10,8 +10,8 @@
 		"wav", "IE9+", "player", "cross plateform", "HTML5"
 	],
 	"main" :  [
-		"dist/waveplayer.js",
-		"dist/waveplayer.css",
+		"dist/waveplayer.min.js",
+		"dist/waveplayer.min.css",
 		"dist/wave-buttons.png"
 	],
 	"ignore" : [
