@@ -32,8 +32,8 @@ bower install waveplayer
 You can use the jquery approach which generates a HTML interface :
 
 ```html
-	<link href="../dist/waveplayer.css" type="text/css" rel="stylesheet" />
-	<script src="../dist/waveplayer.js"></script>
+	<link href="../dist/waveplayer.min.css" type="text/css" rel="stylesheet" />
+	<script src="../dist/waveplayer.min.js"></script>
 	<script>
 		$(document).ready(function() {
 			$('.wave-player').wavePlayer();
