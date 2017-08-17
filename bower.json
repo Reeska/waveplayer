@@ -9,11 +9,7 @@
 	"keywords" : [ 
 		"wav", "IE9+", "player", "cross plateform", "HTML5"
 	],
-	"main" :  [
-		"dist/waveplayer.min.js",
-		"dist/waveplayer.min.css",
-		"dist/wave-buttons.png"
-	],
+	"main" :  "dist/waveplayer.min.js",
 	"ignore" : [
 	    ".gitignore",
 		"README.md",
