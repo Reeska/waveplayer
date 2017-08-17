@@ -13,9 +13,9 @@ The original purpose is to fix IE9+ .wav playing with HTML5 audio tag that is no
 Tested formats and browsers :
 
 | Format   | IE7+ | Firefox | Chrome | Chrome Android |
-| ---------- |:----:|:-----:|:-------:|:--------:|:----------:|:---------------:|:--------------:|
-| WAV | ✓ | ✓ | ✓ | ✓ |
-| MP3 | ✓ | ✓ | ✓ | ✓ |
+|:--------:|:----:|:-------:|:------:|:--------------:|
+| WAV      | ✓    | ✓       | ✓      | ✓              |
+| MP3      | ✓    | ✓       | ✓      | ✓              |
 
 ## Downloads
 
